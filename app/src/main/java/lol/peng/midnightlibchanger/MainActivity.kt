@@ -10,13 +10,9 @@ import android.media.AudioManager
 import android.graphics.Typeface
 import android.graphics.Color
 import android.view.Gravity
-import android.view.View
-import android.view.ViewGroup
 import android.widget.*
-import android.text.InputType
 import org.json.JSONObject
 import java.io.ByteArrayOutputStream
-import java.nio.charset.Charset
 import kotlin.concurrent.thread
 
 class MainActivity : Activity() {
@@ -36,7 +32,7 @@ class MainActivity : Activity() {
     private var sounds = true
     private var stars = true
     private var animations = true
-    private var accent = Color.rgb(139, 125, 255)
+    private var accent = Color.BLACK
 
     private lateinit var root: LinearLayout
     private lateinit var content: LinearLayout
@@ -52,6 +48,8 @@ class MainActivity : Activity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
+        accent = Color.BLACK
         showHome()
     }
 
@@ -69,6 +67,7 @@ class MainActivity : Activity() {
         root = LinearLayout(this).apply {
             orientation = LinearLayout.VERTICAL
             setPadding(dp(18), dp(22), dp(18), dp(18))
+
             background = NightDrawable(
                 this@MainActivity,
                 { stars },
@@ -82,15 +81,15 @@ class MainActivity : Activity() {
 
         header.addView(TextView(this).apply {
             text = "✦  MIDNIGHT"
-            setTextColor(accent)
-            textSize = 12f
+            setTextColor(Color.BLACK)
+            textSize = 13f
             letterSpacing = .22f
             setTypeface(null, Typeface.BOLD)
         })
 
         header.addView(TextView(this).apply {
             text = title
-            setTextColor(Color.WHITE)
+            setTextColor(Color.BLACK)
             textSize = 27f
             setTypeface(null, Typeface.BOLD)
             setPadding(0, dp(8), 0, 0)
@@ -98,7 +97,7 @@ class MainActivity : Activity() {
 
         header.addView(TextView(this).apply {
             text = subtitle
-            setTextColor(0xffa7abc5.toInt())
+            setTextColor(0xff555555.toInt())
             textSize = 13f
             setPadding(0, dp(5), 0, dp(18))
         })
@@ -120,14 +119,14 @@ class MainActivity : Activity() {
 
         status = TextView(this).apply {
             text = "MIDNIGHT LIB CHANGER  •  PENG.LOL"
-            setTextColor(0xff777d9d.toInt())
+            setTextColor(0xff555555.toInt())
             textSize = 10f
             gravity = Gravity.CENTER
+            setTypeface(null, Typeface.BOLD)
             setPadding(0, dp(14), 0, 0)
         }
 
         root.addView(status)
-
         setContentView(root)
     }
 
@@ -135,12 +134,12 @@ class MainActivity : Activity() {
 
         val box = LinearLayout(this).apply {
             orientation = LinearLayout.VERTICAL
-            setPadding(dp(15), dp(13), dp(15), dp(13))
+            setPadding(dp(16), dp(15), dp(16), dp(15))
 
             background = android.graphics.drawable.GradientDrawable().apply {
-                setColor(0xdd151a31.toInt())
+                setColor(Color.BLACK)
                 cornerRadius = dp(16).toFloat()
-                setStroke(dp(1), 0xff2a3150.toInt())
+                setStroke(dp(1), 0xff333333.toInt())
             }
         }
 
@@ -154,14 +153,14 @@ class MainActivity : Activity() {
         if (detail != null) {
             box.addView(TextView(this).apply {
                 text = detail
-                setTextColor(0xffa8aec9.toInt())
+                setTextColor(0xffcccccc.toInt())
                 textSize = 12f
                 setPadding(0, dp(5), 0, 0)
             })
         }
 
         val lp = LinearLayout.LayoutParams(-1, -2)
-        lp.bottomMargin = dp(11)
+        lp.bottomMargin = dp(12)
 
         content.addView(box, lp)
     }
@@ -169,28 +168,40 @@ class MainActivity : Activity() {
     private fun button(text: String, action: () -> Unit) {
 
         val b = TextView(this).apply {
-
             this.text = text
             setTextColor(Color.WHITE)
             textSize = 14f
             gravity = Gravity.CENTER
             setTypeface(null, Typeface.BOLD)
-
-            setPadding(dp(14), dp(14), dp(14), dp(14))
+            setPadding(dp(14), dp(15), dp(14), dp(15))
 
             background = android.graphics.drawable.GradientDrawable().apply {
-                setColor(accent)
-                cornerRadius = dp(12).toFloat()
+                setColor(Color.BLACK)
+                cornerRadius = dp(13).toFloat()
             }
 
             setOnClickListener {
                 click()
-                action()
+
+                animate()
+                    .scaleX(0.96f)
+                    .scaleY(0.96f)
+                    .setDuration(80)
+                    .withEndAction {
+                        animate()
+                            .scaleX(1f)
+                            .scaleY(1f)
+                            .setDuration(100)
+                            .start()
+
+                        action()
+                    }
+                    .start()
             }
         }
 
         val lp = LinearLayout.LayoutParams(-1, -2)
-        lp.bottomMargin = dp(9)
+        lp.bottomMargin = dp(10)
 
         content.addView(b, lp)
     }
@@ -201,16 +212,17 @@ class MainActivity : Activity() {
             setSingleLine(false)
             setText(value)
             this.hint = hint
-            setTextColor(Color.WHITE)
-            setHintTextColor(0xff858ba8.toInt())
+
+            setTextColor(Color.BLACK)
+            setHintTextColor(0xff777777.toInt())
             textSize = 14f
 
             setPadding(dp(12), dp(10), dp(12), dp(10))
 
             background = android.graphics.drawable.GradientDrawable().apply {
-                setColor(0xff10152a.toInt())
+                setColor(Color.WHITE)
                 cornerRadius = dp(10).toFloat()
-                setStroke(dp(1), 0xff343c60.toInt())
+                setStroke(dp(1), Color.BLACK)
             }
         }
 
@@ -218,7 +230,6 @@ class MainActivity : Activity() {
         lp.bottomMargin = dp(9)
 
         content.addView(e, lp)
-
         return e
     }
 
@@ -226,7 +237,7 @@ class MainActivity : Activity() {
 
         base(
             "Your library, reimagined",
-            "A native-library customization workspace with a midnight look."
+            "A native-library customization workspace."
         )
 
         card("LIBRARY WORKSPACE", libraryName)
@@ -265,10 +276,8 @@ class MainActivity : Activity() {
         }
     }
 
-    // Maximum supported library size: 64 MB.
     private val maxLibraryBytes = 64L * 1024L * 1024L
 
-    // Safely reads a selected library without loading an unlimited file.
     private fun readLibrary(uri: Uri): ByteArray {
 
         val input = contentResolver.openInputStream(uri)
@@ -280,13 +289,10 @@ class MainActivity : Activity() {
 
             val output = ByteArrayOutputStream()
             val buffer = ByteArray(64 * 1024)
-
             var total = 0L
 
             while (true) {
-
                 val count = stream.read(buffer)
-
                 if (count == -1) break
 
                 total += count
@@ -315,13 +321,12 @@ class MainActivity : Activity() {
         )
     }
 
-    @Deprecated("Deprecated in Android API but compatible with the minimum supported Android version")
+    @Deprecated("Deprecated Android API retained for compatibility")
     override fun onActivityResult(
         requestCode: Int,
         resultCode: Int,
         data: Intent?
     ) {
-
         super.onActivityResult(requestCode, resultCode, data)
 
         if (resultCode != RESULT_OK || data?.data == null) return
@@ -331,13 +336,10 @@ class MainActivity : Activity() {
         when (requestCode) {
 
             pickLib -> {
-
                 status.text = "IMPORTING LIBRARY..."
 
                 thread {
-
                     try {
-
                         val bytes = readLibrary(uri)
 
                         val name = uri.lastPathSegment
@@ -346,19 +348,15 @@ class MainActivity : Activity() {
                             ?: "Imported library"
 
                         runOnUiThread {
-
                             libraryBytes = bytes
                             libraryName = name
 
                             showHome()
-
                             toast("Library imported successfully")
                         }
 
                     } catch (e: Exception) {
-
                         runOnUiThread {
-
                             status.text =
                                 "MIDNIGHT LIB CHANGER  •  PENG.LOL"
 
@@ -371,11 +369,12 @@ class MainActivity : Activity() {
             }
 
             saveLib -> try {
-
                 val bytes = pendingExport ?: return
 
                 val output = contentResolver.openOutputStream(uri, "w")
-                    ?: throw java.io.IOException("Could not create output file.")
+                    ?: throw java.io.IOException(
+                        "Could not create output file."
+                    )
 
                 output.use {
                     it.write(bytes)
@@ -384,12 +383,10 @@ class MainActivity : Activity() {
                 toast("Export complete")
 
             } catch (e: Exception) {
-
                 toast("Export failed: ${e.message}")
             }
 
             pickFont -> try {
-
                 val input = contentResolver.openInputStream(uri)
                     ?: throw java.io.IOException("Could not open font.")
 
@@ -406,19 +403,17 @@ class MainActivity : Activity() {
                 showFonts()
 
             } catch (e: Exception) {
-
-                toast("Could not load font")
+                toast("Could not load font: ${e.message}")
             }
         }
     }
 
     private fun scanLibrary() {
 
-        val bytes = libraryBytes
-            ?: run {
-                toast("Import a library first")
-                return
-            }
+        val bytes = libraryBytes ?: run {
+            toast("Import a library first")
+            return
+        }
 
         found.clear()
 
@@ -439,7 +434,6 @@ class MainActivity : Activity() {
                 }
 
                 if (i - start >= 4) {
-
                     val s = String(
                         bytes,
                         start,
@@ -468,7 +462,6 @@ class MainActivity : Activity() {
         )
 
         if (found.isEmpty()) {
-
             card(
                 "NO STRINGS FOUND",
                 "This library may store text in resources, compressed data, or encrypted structures."
@@ -509,13 +502,10 @@ class MainActivity : Activity() {
                                 (it.toInt() and 255) !in 32..126
                             }
                         ) {
-
                             toast(
                                 "Use printable ASCII no longer than the original."
                             )
-
                         } else {
-
                             val b = libraryBytes!!
 
                             for (k in old.indices) {
@@ -546,17 +536,14 @@ class MainActivity : Activity() {
         val credits = field("Credits", "Modified by PENG.LOL")
 
         val note = TextView(this).apply {
-            text =
-                "These values are saved as an edit plan. Run Scan library strings and replace matching entries; the app does not guess binary offsets."
-
-            setTextColor(0xffaab0ca.toInt())
+            text = "These values are saved as an edit plan. Run Scan library strings and replace matching entries; the app does not guess binary offsets."
+            setTextColor(0xff555555.toInt())
             textSize = 12f
         }
 
         content.addView(note)
 
         button("Save text edit plan") {
-
             getPreferences(0).edit()
                 .putString("menu_title", title.text.toString())
                 .putString("credits", credits.text.toString())
@@ -574,35 +561,27 @@ class MainActivity : Activity() {
 
         base(
             "Menu theme editor",
-            "Build a visual theme preset for your menu."
+            "Build a black-and-white theme preset for your menu."
         )
 
         val names = listOf(
-            "Midnight violet" to 0xff8b7dff.toInt(),
-            "Arctic blue" to 0xff55b9ff.toInt(),
-            "Aurora teal" to 0xff45d6bd.toInt(),
-            "Moonlight pink" to 0xffff82bc.toInt()
+            "Classic black",
+            "Pure white",
+            "Monochrome",
+            "Midnight monochrome"
         )
 
-        names.forEach { (n, c) ->
-
-            button("●  $n") {
-
-                accent = c
-
-                getPreferences(0).edit()
-                    .putInt("accent", c)
-                    .apply()
-
+        names.forEach { name ->
+            button("✦  $name") {
+                accent = Color.BLACK
                 showThemes()
             }
         }
 
         val preview = TextView(this).apply {
-
             text = "THEME PREVIEW  •  Midnight menu"
             textSize = 17f
-            setTextColor(accent)
+            setTextColor(Color.BLACK)
             setPadding(0, dp(18), 0, dp(18))
             setTypeface(null, Typeface.BOLD)
         }
@@ -612,13 +591,11 @@ class MainActivity : Activity() {
         button("Export theme JSON") {
 
             val json = JSONObject()
-                .put("name", "Midnight custom")
-                .put(
-                    "accent",
-                    String.format("#%06X", 0xFFFFFF and accent)
-                )
-                .put("background", "#090D1D")
-                .put("surface", "#151A31")
+                .put("name", "Midnight monochrome")
+                .put("accent", "#000000")
+                .put("background", "#FFFFFF")
+                .put("surface", "#000000")
+                .put("text", "#FFFFFF")
 
             pendingExport = json.toString(2).toByteArray()
 
@@ -649,10 +626,9 @@ class MainActivity : Activity() {
         val sample = field("Preview text", "Midnight menu")
 
         val preview = TextView(this).apply {
-
             text = "Midnight menu preview"
             textSize = 25f
-            setTextColor(Color.WHITE)
+            setTextColor(Color.BLACK)
             setPadding(0, dp(16), 0, dp(16))
             typeface = chosenFont ?: Typeface.DEFAULT_BOLD
         }
@@ -689,7 +665,6 @@ class MainActivity : Activity() {
         }
 
         button("Use bold style") {
-
             preview.typeface = Typeface.create(
                 chosenFont ?: Typeface.DEFAULT,
                 Typeface.BOLD
@@ -734,17 +709,15 @@ class MainActivity : Activity() {
             initial: Boolean,
             onChange: (Boolean) -> Unit
         ) {
-
             val sw = Switch(this).apply {
-
                 text = label
-                setTextColor(Color.WHITE)
+                setTextColor(Color.BLACK)
                 isChecked = initial
                 textSize = 15f
                 setPadding(0, dp(12), 0, dp(12))
 
-                setOnCheckedChangeListener { _, v ->
-                    onChange(v)
+                setOnCheckedChangeListener { _, value ->
+                    onChange(value)
                     click()
                 }
             }
@@ -752,12 +725,14 @@ class MainActivity : Activity() {
             content.addView(sw)
         }
 
-        toggle("Animated night sky", stars) {
+        toggle("Animated black stars", stars) {
             stars = it
+            root.invalidate()
         }
 
         toggle("Background motion", animations) {
             animations = it
+            root.invalidate()
         }
 
         toggle("Button click sounds", sounds) {
@@ -766,16 +741,14 @@ class MainActivity : Activity() {
 
         card(
             "APP INFO",
-            "Midnight lib changer\nVersion 1.0.0\nMade by PENG.LOL"
+            "Midnight Lib Changer\nVersion 1.0.0\nMade by PENG.LOL"
         )
 
         button("Reset app appearance") {
-
-            accent = 0xff8b7dff.toInt()
+            accent = Color.BLACK
             stars = true
             animations = true
             sounds = true
-
             showSettings()
         }
 
@@ -786,11 +759,10 @@ class MainActivity : Activity() {
 
     private fun exportLibrary() {
 
-        val b = libraryBytes
-            ?: run {
-                toast("Import a library first")
-                return
-            }
+        val b = libraryBytes ?: run {
+            toast("Import a library first")
+            return
+        }
 
         pendingExport = b
 
